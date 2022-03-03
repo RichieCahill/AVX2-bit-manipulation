@@ -1,2 +1,2 @@
 # AVX2-bit-manipulation
-This is a libreay that alow bit mimipulation that avx intrinsics don't
+This is a library that allow bit manipulation that Intrinsics don't. This take abut 20 clock cycles by my calculations. 
