@@ -3,13 +3,10 @@
 
 /*
 It Takes about 20 clock cycles to lefts shift
+And only can shift 64 bits
 
 TODO
-make this into a library
-
 add
-Logical Right Shift
-Rotate Right
 128 bit Suport
 
 Make this code self testing
@@ -19,6 +16,10 @@ use git hub action
 
 // Logical left shift for a avx 256bit register
 __m256i _mm256_lls_mm256  (__m256i n, int64_t s){
+	if (s==0)
+		return n;
+	if (s>64)
+		return n = _mm256_setzero_si256();;
 	//creats a temp __m256i  masked with the last s bits form rail 2 1 0 and seth them to the first bits in rail 3 2 1
 	__m256i temp;
 
@@ -27,7 +28,6 @@ __m256i _mm256_lls_mm256  (__m256i n, int64_t s){
 	rail2 = rail2 >> (64-s);
 	rail1 = rail1 >> (64-s);
 	rail0 = rail0 >> (64-s);
-
 	temp = _mm256_set_epi64x(rail2, rail1, rail0, 0X0000000000000000);
 
 	// left shifts the 4 64 bit ins in n then or with temp
@@ -39,7 +39,11 @@ __m256i _mm256_lls_mm256  (__m256i n, int64_t s){
 // Logical left shift for a avx 256bit register
 //Uses 1 less 64 bit register
 __m256i _mm256_lls_mm256_Small (__m256i n, int64_t s){
-		//creates a temp __m256i  masked with the last s bits form rail 2 1 0 and seth them to the first bits in rail 3 2 1
+	if (s==0)
+		return n;
+	if (s>64)
+		return n = _mm256_setzero_si256();;
+	//creates a temp __m256i  masked with the last s bits form rail 2 1 0 and seth them to the first bits in rail 3 2 1
 	__m256i temp;
 	__m128i t128_0, t128_1;
 	uint64_t t64_0, t64_1;
@@ -67,7 +71,10 @@ __m256i _mm256_lls_mm256_Small (__m256i n, int64_t s){
 
 // Rotate left for a avx 256bit register
 __m256i _mm256_rotl (__m256i n, int64_t s){
-
+	if (s==0)
+		return n;
+	if (s>64)
+		return n = _mm256_setzero_si256();;
 	//creats a temp __m256i  masked with the last s bits form rail 3 2 1 0 and seth them to the first bits in rail 3 2 1 0
 	__m256i temp;
 	uint64_t rail3 = _mm256_extract_epi64(n, 3), rail2 = _mm256_extract_epi64(n, 2), rail1 = _mm256_extract_epi64(n, 1), rail0 = _mm256_extract_epi64(n, 0);
@@ -88,6 +95,10 @@ __m256i _mm256_rotl (__m256i n, int64_t s){
 
 // Logical Right shift for a avx 256bit register
 __m256i _mm256_lrs_mm256  (__m256i n, int64_t s){
+	if (s==0)
+		return n;
+	if (s>64)
+		return n = _mm256_setzero_si256();;
 	//creats a temp __m256i  masked with the first s bits form rail 3 2 1 and seth them to the last bits in rail 2 1
 	__m256i temp;
 
@@ -107,7 +118,10 @@ __m256i _mm256_lrs_mm256  (__m256i n, int64_t s){
 
 // Rotate left for a avx 256bit register
 __m256i _mm256_rotr (__m256i n, int64_t s){
-
+	if (s==0)
+		return n;
+	if (s>64)
+		return n = _mm256_setzero_si256();;
 	//creats a temp __m256i  masked with the first s bits form rail 3 2 1 0 and seth them to the last bits in rail 3 2 1 0
 	__m256i temp;
 	uint64_t rail3 = _mm256_extract_epi64(n, 3), rail2 = _mm256_extract_epi64(n, 2), rail1 = _mm256_extract_epi64(n, 1), rail0 = _mm256_extract_epi64(n, 0);
@@ -123,10 +137,4 @@ __m256i _mm256_rotr (__m256i n, int64_t s){
 	n = n >> s;
 	n = _mm256_or_si256(n, temp);
 	return n;
-}
-
-
-int main(int argc, char const *argv[]){
-
-	return 0;
 }
