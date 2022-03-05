@@ -14,11 +14,11 @@ use git hub action
 */
 
 void avxout(__m256i a){
-std::cout << std::hex << _mm256_extract_epi64(a, 3) << std::endl;
-std::cout << std::hex << _mm256_extract_epi64(a, 2) << std::endl;
-std::cout << std::hex << _mm256_extract_epi64(a, 1) << std::endl;
-std::cout << std::hex << _mm256_extract_epi64(a, 0) << std::endl;
-std::cout << endl;
+std::cout << _mm256_extract_epi64(a, 3) << "\n";
+std::cout << _mm256_extract_epi64(a, 2) << "\n";
+std::cout << _mm256_extract_epi64(a, 1) << "\n";
+std::cout << _mm256_extract_epi64(a, 0) << "\n";
+std::cout << "\n";
 }
 
 
