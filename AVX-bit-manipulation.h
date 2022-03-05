@@ -14,7 +14,7 @@ use git hub action
 */
 
 
-// Logical left shift for a avx 256bit register
+// Logical left shift upto 64 bit for a avx 256bit register
 __m256i _mm256_lls_mm256_helper  (__m256i n, int64_t s){
 	if (s==0)
 		return n;
@@ -34,22 +34,27 @@ __m256i _mm256_lls_mm256_helper  (__m256i n, int64_t s){
 	return n;
 }
 
+// Logical left shift by 64 for a avx 256bit register
 __m256i _mm256_lls_64(__m256i n){
 	uint64_t rail2 = _mm256_extract_epi64(n, 2), rail1 = _mm256_extract_epi64(n, 1), rail0 = _mm256_extract_epi64(n, 0);
 	return n = _mm256_set_epi64x(rail2, rail1, rail0, 0);
 }
 
+// Logical left shift by 128 for a avx 256bit register
 __m256i _mm256_lls_128(__m256i n){
 	uint64_t rail1 = _mm256_extract_epi64(n, 1), rail0 = _mm256_extract_epi64(n, 0);
 	return n = _mm256_set_epi64x(rail1, rail0, 0, 0);
 }
 
+// Logical left shift by 192 for a avx 256bit register
 __m256i _mm256_lls_192(__m256i n){
 	uint64_t rail0 = _mm256_extract_epi64(n, 0);
 	return n = _mm256_set_epi64x(rail0, 0, 0, 0);
 }
 
 
+// Logical left shift for a avx 256bit register
+// it combines the larger shift _mm256_lls_* with the _mm256_lls_mm256_helper todo the final s bits
 __m256i _mm256_lls_mm256(__m256i n, int64_t s){
 	if (s==0)
 		return n;
@@ -57,7 +62,6 @@ __m256i _mm256_lls_mm256(__m256i n, int64_t s){
 		n = _mm256_lls_mm256_helper(n,s);
 		return n;
 	} else if (s<=128){
-		uint64_t temp=s-64;
 		n = _mm256_lls_64(n);
 		n = _mm256_lls_mm256_helper(n,s-64);
 		return n;
@@ -131,8 +135,8 @@ __m256i _mm256_rotl (__m256i n, int64_t s){
 }
 
 
-// Logical Right shift for a avx 256bit register
-__m256i _mm256_lrs_mm256  (__m256i n, int64_t s){
+	// Logical right shift upto 64 bit for a avx 256bit register
+__m256i _mm256_lrs_mm256_helper  (__m256i n, int64_t s){
 	if (s==0)
 		return n;
 	if (s>64)
@@ -152,6 +156,50 @@ __m256i _mm256_lrs_mm256  (__m256i n, int64_t s){
 	n = n >> s;
 	n = _mm256_or_si256(n, temp);
 	return n;
+}
+
+// Logical Right shift by 64 for a avx 256bit register
+__m256i _mm256_lrs_64(__m256i n){
+	uint64_t rail3 = _mm256_extract_epi64(n, 3), rail2 = _mm256_extract_epi64(n, 2), rail1 = _mm256_extract_epi64(n, 1);
+	return n = _mm256_set_epi64x(0, rail3, rail2, rail1);
+}
+
+// Logical Right shift by 128 for a avx 256bit register
+__m256i _mm256_lrs_128(__m256i n){
+	uint64_t rail3 = _mm256_extract_epi64(n, 3), rail2 = _mm256_extract_epi64(n, 2);
+	return n = _mm256_set_epi64x(0, 0, rail3, rail2);
+}
+
+// Logical Right shift by 192 for a avx 256bit register
+__m256i _mm256_lrs_192(__m256i n){
+	uint64_t rail3 = _mm256_extract_epi64(n, 3);
+	return n = _mm256_set_epi64x(0, 0, 0, rail3);
+}
+
+
+// Logical Right shift for a avx 256bit register
+// it combines the larger shift _mm256_lrs_* with the _mm256_lrs_mm256_helper todo the final s bits
+__m256i _mm256_lls_mm256(__m256i n, int64_t s){
+	if (s==0)
+		return n;
+	if (s<=64) {
+		n = _mm256_lrs_mm256_helper(n,s);
+		return n;
+	} else if (s<=128){
+		n = _mm256_lrs_64(n);
+		n = _mm256_lrs_mm256_helper(n,s-64);
+		return n;
+	}	else if (s<=192){
+		n = _mm256_lrs_128(n);
+		n = _mm256_lrs_mm256_helper(n,s-128);
+		return n;
+	} else if (s<=256){
+		n = _mm256_lrs_192(n);
+		n = _mm256_lrs_mm256_helper(n,s-192);
+		return n;
+	} else if (s>256)
+		return n = _mm256_setzero_si256();;
+	return n = _mm256_set_epi64x(0, 0, 0, 9ULL);
 }
 
 // Rotate left for a avx 256bit register
