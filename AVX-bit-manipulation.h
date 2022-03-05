@@ -13,13 +13,12 @@ Make this code self testing
 use git hub action
 */
 
-using namespace std;
 void avxout(__m256i a){
-cout << hex << _mm256_extract_epi64(a, 3) << endl;
-cout << hex << _mm256_extract_epi64(a, 2) << endl;
-cout << hex << _mm256_extract_epi64(a, 1) << endl;
-cout << hex << _mm256_extract_epi64(a, 0) << endl;
-cout << endl;
+std::cout << std::hex << _mm256_extract_epi64(a, 3) << std::endl;
+std::cout << std::hex << _mm256_extract_epi64(a, 2) << std::endl;
+std::cout << std::hex << _mm256_extract_epi64(a, 1) << std::endl;
+std::cout << std::hex << _mm256_extract_epi64(a, 0) << std::endl;
+std::cout << endl;
 }
 
 
