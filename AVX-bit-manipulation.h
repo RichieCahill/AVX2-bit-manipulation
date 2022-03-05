@@ -13,6 +13,15 @@ Make this code self testing
 use git hub action
 */
 
+using namespace std;
+void avxout(__m256i a){
+cout << hex << _mm256_extract_epi64(a, 3) << endl;
+cout << hex << _mm256_extract_epi64(a, 2) << endl;
+cout << hex << _mm256_extract_epi64(a, 1) << endl;
+cout << hex << _mm256_extract_epi64(a, 0) << endl;
+cout << endl;
+}
+
 
 // Logical left shift upto 64 bit for a avx 256bit register
 __m256i _mm256_lls_mm256_helper  (__m256i n, int64_t s){
@@ -115,10 +124,8 @@ __m256i _mm256_lls_mm256_Small (__m256i n, int64_t s){
 __m256i _mm256_rotl (__m256i n, int64_t s){
 	if (s==0)
 		return n;
-	if (s>64)
-		return n = _mm256_setzero_si256();;
 	//creats a temp __m256i  masked with the last s bits form rail 3 2 1 0 and seth them to the first bits in rail 3 2 1 0
-	__m256i temp;
+	__m256i temp, temp2;
 	uint64_t rail3 = _mm256_extract_epi64(n, 3), rail2 = _mm256_extract_epi64(n, 2), rail1 = _mm256_extract_epi64(n, 1), rail0 = _mm256_extract_epi64(n, 0);
 
 	rail3 = rail3 >> (64-s);
@@ -134,17 +141,44 @@ __m256i _mm256_rotl (__m256i n, int64_t s){
 	return n;
 }
 
+	// Logical right shift upto 64 bit for a avx 256bit register
+	// this is a siple optimization the reduse the number of avx registers
+	// but it less readable
+__m256i _mm256_lrs_mm256_helper2  (__m256i n, int64_t s){
+	if (s==0)
+		return n;
+	if (s>64)
+		return n = _mm256_setzero_si256();
+	//creats a temp __m256i  masked with the first s bits form rail 3 2 1 and seth them to the last bits in rail 2 1
+	__m256i  temp;
+
+	uint64_t rail3 = _mm256_extract_epi64(n, 3), rail2 = _mm256_extract_epi64(n, 2), rail1 = _mm256_extract_epi64(n, 1);
+
+	rail3 = rail3 << (64-s);
+	rail2 = rail2 << (64-s);
+	rail1 = rail1 << (64-s);
+	
+	// right shifts the 4 64 bit ins in n then or with temp
+	temp = _mm256_set_epi64x(s, s, s, s);
+	n = _mm256_srlv_epi64 (n , temp);
+	
+	temp = _mm256_set_epi64x( 0, rail3, rail2, rail1);
+
+	n = _mm256_or_si256(n, temp);
+	return n;
+}
+
 
 	// Logical right shift upto 64 bit for a avx 256bit register
 __m256i _mm256_lrs_mm256_helper  (__m256i n, int64_t s){
 	if (s==0)
 		return n;
 	if (s>64)
-		return n = _mm256_setzero_si256();;
+		return n = _mm256_setzero_si256();
 	//creats a temp __m256i  masked with the first s bits form rail 3 2 1 and seth them to the last bits in rail 2 1
-	__m256i temp;
+	__m256i  temp, temp2;
 
-	uint64_t rail3 = _mm256_extract_epi64(n, 0), rail2 = _mm256_extract_epi64(n, 2), rail1 = _mm256_extract_epi64(n, 1);
+	uint64_t rail3 = _mm256_extract_epi64(n, 3), rail2 = _mm256_extract_epi64(n, 2), rail1 = _mm256_extract_epi64(n, 1);
 
 	rail3 = rail3 << (64-s);
 	rail2 = rail2 << (64-s);
@@ -153,7 +187,9 @@ __m256i _mm256_lrs_mm256_helper  (__m256i n, int64_t s){
 	temp = _mm256_set_epi64x( 0, rail3, rail2, rail1);
 
 	// right shifts the 4 64 bit ins in n then or with temp
-	n = n >> s;
+	temp2 = _mm256_set_epi64x(s, s, s, s);
+	n = _mm256_srlv_epi64 (n , temp2);
+
 	n = _mm256_or_si256(n, temp);
 	return n;
 }
@@ -179,7 +215,7 @@ __m256i _mm256_lrs_192(__m256i n){
 
 // Logical Right shift for a avx 256bit register
 // it combines the larger shift _mm256_lrs_* with the _mm256_lrs_mm256_helper todo the final s bits
-__m256i _mm256_lls_mm256(__m256i n, int64_t s){
+__m256i _mm256_lrs_mm256(__m256i n, int64_t s){
 	if (s==0)
 		return n;
 	if (s<=64) {
