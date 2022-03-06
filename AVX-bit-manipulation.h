@@ -3,14 +3,6 @@
 
 /*
 It Takes about 20 clock cycles to lefts shift
-And only can shift 64 bits
-
-TODO
-add
-128 bit Suport
-
-Make this code self testing
-use git hub action
 */
 
 void avxout(__m256i a){
@@ -47,6 +39,13 @@ __m256i _mm256_lls_mm256_helper2  (__m256i n, int64_t s){
 	if (s==0)
 		return n;
 	n = _mm256_or_si256(_mm256_sllv_epi64(n,_mm256_set_epi64x(s,s,s,s)), _mm256_set_epi64x((_mm256_extract_epi64(n, 2) >> (64-s)), (_mm256_extract_epi64(n, 1) >> (64-s)), (_mm256_extract_epi64(n, 0) >> (64-s)), 0));
+	return n;
+}
+
+__m256i _mm256_lls_mm256_helper3  (__m256i n, int64_t s){
+	if (s==0)
+		return n;
+	n = _mm256_or_si256((n << s), _mm256_set_epi64x((_mm256_extract_epi64(n, 2) >> (64-s)), (_mm256_extract_epi64(n, 1) >> (64-s)), (_mm256_extract_epi64(n, 0) >> (64-s)), 0));
 	return n;
 }
 
