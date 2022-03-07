@@ -13,40 +13,40 @@ std::cout << std::hex << _mm256_extract_epi64(a, 0) << "\n";
 std::cout << "\n";
 }
 
-
+/*
 // Logical left shift upto 64 bit for a avx 256bit register
 // this is hear to help explain with the new helper dose
-// it's functionally the same thing but this isnt inlined  
-// __m256i _mm256_lls_mm256_helper_old  (__m256i n, int64_t s){
-// 	if (s==0)
-// 		return n;
-// 	//creats a temp __m256i  masked with the last s bits form rail 2 1 0 and seth them to the first bits in rail 3 2 1
-// 	__m256i temp;
+// it's functionally the same thing but this isnt inlined
+__m256i _mm256_lls_mm256_helper_old  (__m256i n, int64_t s){
+	if (s==0)
+		return n;
+	//creats a temp __m256i  masked with the last s bits form rail 2 1 0 and seth them to the first bits in rail 3 2 1
+	__m256i temp;
 
-// 	uint64_t rail2 = _mm256_extract_epi64(n, 2), rail1 = _mm256_extract_epi64(n, 1), rail0 = _mm256_extract_epi64(n, 0);
+	uint64_t rail2 = _mm256_extract_epi64(n, 2), rail1 = _mm256_extract_epi64(n, 1), rail0 = _mm256_extract_epi64(n, 0);
 
-// 	rail2 = rail2 >> (64-s);
-// 	rail1 = rail1 >> (64-s);
-// 	rail0 = rail0 >> (64-s);
-// 	temp = _mm256_set_epi64x(rail2, rail1, rail0, 0);
+	rail2 = rail2 >> (64-s);
+	rail1 = rail1 >> (64-s);
+	rail0 = rail0 >> (64-s);
+	temp = _mm256_set_epi64x(rail2, rail1, rail0, 0);
 
-// 	// left shifts the 4 64 bit ins in n then or with temp
-// 	n = n << s;
-// 	n = _mm256_or_si256(n, temp);
-// 	return n;
-// }
+	// left shifts the 4 64 bit ins in n then or with temp
+	n = n << s;
+	n = _mm256_or_si256(n, temp);
+	return n;
+}
+*/
 
 // Logical left shift upto 64 bit for a avx 256bit register
 __m256i _mm256_lls_mm256_helper  (__m256i n, int64_t s){
 	if (s==0)
 		return n;
-	n = _mm256_or_si256((n << s), _mm256_set_epi64x((_mm256_extract_epi64(n, 2) >> (64-s)), (_mm256_extract_epi64(n, 1) >> (64-s)), (_mm256_extract_epi64(n, 0) >> (64-s)), 0));
-	return n;
+	return _mm256_or_si256((n << s), _mm256_set_epi64x((_mm256_extract_epi64(n, 2) >> (64-s)), (_mm256_extract_epi64(n, 1) >> (64-s)), (_mm256_extract_epi64(n, 0) >> (64-s)), 0));
 }
 
 // Logical left shift by 64 for a avx 256bit register
 // this is hear to help explain with the new _mm256_lls_64 dose
-// it's functionally the same thing but this isnt inlined 
+// it's functionally the same thing but this isnt inlined
 // __m256i _mm256_lls_64_old(__m256i n){
 // 	uint64_t rail2 = _mm256_extract_epi64(n, 2), rail1 = _mm256_extract_epi64(n, 1), rail0 = _mm256_extract_epi64(n, 0);
 // 	return n = _mm256_set_epi64x(rail2, rail1, rail0, 0);
@@ -54,17 +54,17 @@ __m256i _mm256_lls_mm256_helper  (__m256i n, int64_t s){
 
 // Logical left shift by 64 for a avx 256bit register
 __m256i _mm256_lls_64(__m256i n){
-	return n = _mm256_set_epi64x(_mm256_extract_epi64(n, 2), _mm256_extract_epi64(n, 1), _mm256_extract_epi64(n, 0), 0);
+	return _mm256_set_epi64x(_mm256_extract_epi64(n, 2), _mm256_extract_epi64(n, 1), _mm256_extract_epi64(n, 0), 0);
 }
 
 // Logical left shift by 128 for a avx 256bit register
 __m256i _mm256_lls_128(__m256i n){
-	return n = _mm256_set_epi64x(_mm256_extract_epi64(n, 1), _mm256_extract_epi64(n, 0), 0, 0);
+	return _mm256_set_epi64x(_mm256_extract_epi64(n, 1), _mm256_extract_epi64(n, 0), 0, 0);
 }
 
 // Logical left shift by 192 for a avx 256bit register
 __m256i _mm256_lls_192(__m256i n){
-	return n = _mm256_set_epi64x(_mm256_extract_epi64(n, 0), 0, 0, 0);
+	return _mm256_set_epi64x(_mm256_extract_epi64(n, 0), 0, 0, 0);
 }
 
 
@@ -74,22 +74,18 @@ __m256i _mm256_lls_mm256(__m256i n, int64_t s){
 	if (s==0)
 		return n;
 	if (s<=64) {
-		n = _mm256_lls_mm256_helper(n,s);
-		return n;
+		return _mm256_lls_mm256_helper(n,s);
 	} else if (s<=128){
 		n = _mm256_lls_64(n);
-		n = _mm256_lls_mm256_helper(n,s-64);
-		return n;
+		return _mm256_lls_mm256_helper(n,s-64);
 	}	else if (s<=192){
 		n = _mm256_lls_128(n);
-		n = _mm256_lls_mm256_helper(n,s-128);
-		return n;
+		return _mm256_lls_mm256_helper(n,s-128);
 	} else if (s<=256){
 		n = _mm256_lls_192(n);
-		n = _mm256_lls_mm256_helper(n,s-192);
-		return n;
+		return _mm256_lls_mm256_helper(n,s-192);
 	} else if (s>256)
-		return n = _mm256_setzero_si256();;
+		return _mm256_setzero_si256();;
 	return n = _mm256_set_epi64x(0, 0, 0, 9ULL);
 }
 
@@ -115,36 +111,11 @@ __m256i _mm256_rotl (__m256i n, int64_t s){
 	return n;
 }
 
-	// Logical right shift upto 64 bit for a avx 256bit register
-	// this is a siple optimization the reduse the number of avx registers
-	// but it less readable
-__m256i _mm256_lrs_mm256_helper2  (__m256i n, int64_t s){
-	if (s==0)
-		return n;
-	if (s>64)
-		return n = _mm256_setzero_si256();
-	//creats a temp __m256i  masked with the first s bits form rail 3 2 1 and seth them to the last bits in rail 2 1
-	__m256i  temp;
-
-	uint64_t rail3 = _mm256_extract_epi64(n, 3), rail2 = _mm256_extract_epi64(n, 2), rail1 = _mm256_extract_epi64(n, 1);
-
-	rail3 = rail3 << (64-s);
-	rail2 = rail2 << (64-s);
-	rail1 = rail1 << (64-s);
-	
-	// right shifts the 4 64 bit ins in n then or with temp
-	temp = _mm256_set_epi64x(s, s, s, s);
-	n = _mm256_srlv_epi64 (n , temp);
-	
-	temp = _mm256_set_epi64x( 0, rail3, rail2, rail1);
-
-	n = _mm256_or_si256(n, temp);
-	return n;
-}
-
-
-	// Logical right shift upto 64 bit for a avx 256bit register
-__m256i _mm256_lrs_mm256_helper  (__m256i n, int64_t s){
+/*
+// Logical right shift upto 64 bit for a avx 256bit register
+// this is hear to help explain with the new helper dose
+// it's functionally the same thing but this isnt inlined
+__m256i _mm256_lrs_mm256_helper_old  (__m256i n, int64_t s){
 	if (s==0)
 		return n;
 	if (s>64)
@@ -157,7 +128,7 @@ __m256i _mm256_lrs_mm256_helper  (__m256i n, int64_t s){
 	rail3 = rail3 << (64-s);
 	rail2 = rail2 << (64-s);
 	rail1 = rail1 << (64-s);
-	
+
 	temp = _mm256_set_epi64x( 0, rail3, rail2, rail1);
 
 	// right shifts the 4 64 bit ins in n then or with temp
@@ -167,23 +138,28 @@ __m256i _mm256_lrs_mm256_helper  (__m256i n, int64_t s){
 	n = _mm256_or_si256(n, temp);
 	return n;
 }
+*/
+
+// Logical right shift upto 64 bit for a avx 256bit register
+__m256i _mm256_lrs_mm256_helper  (__m256i n, int64_t s){
+	if (s==0)
+		return n;
+	return  _mm256_or_si256(_mm256_srlv_epi64 (n , _mm256_set_epi64x(s, s, s, s)), _mm256_set_epi64x( 0, _mm256_extract_epi64(n, 3) << (64-s), _mm256_extract_epi64(n, 2) << (64-s), _mm256_extract_epi64(n, 1) << (64-s)));
+}
 
 // Logical Right shift by 64 for a avx 256bit register
 __m256i _mm256_lrs_64(__m256i n){
-	uint64_t rail3 = _mm256_extract_epi64(n, 3), rail2 = _mm256_extract_epi64(n, 2), rail1 = _mm256_extract_epi64(n, 1);
-	return n = _mm256_set_epi64x(0, rail3, rail2, rail1);
+	return _mm256_set_epi64x(0, _mm256_extract_epi64(n, 3), _mm256_extract_epi64(n, 2), _mm256_extract_epi64(n, 1));
 }
 
 // Logical Right shift by 128 for a avx 256bit register
 __m256i _mm256_lrs_128(__m256i n){
-	uint64_t rail3 = _mm256_extract_epi64(n, 3), rail2 = _mm256_extract_epi64(n, 2);
-	return n = _mm256_set_epi64x(0, 0, rail3, rail2);
+	return _mm256_set_epi64x(0, 0, _mm256_extract_epi64(n, 3), _mm256_extract_epi64(n, 2);
 }
 
 // Logical Right shift by 192 for a avx 256bit register
 __m256i _mm256_lrs_192(__m256i n){
-	uint64_t rail3 = _mm256_extract_epi64(n, 3);
-	return n = _mm256_set_epi64x(0, 0, 0, rail3);
+	return _mm256_set_epi64x(0, 0, 0, _mm256_extract_epi64(n, 3));
 }
 
 
@@ -193,22 +169,18 @@ __m256i _mm256_lrs_mm256(__m256i n, int64_t s){
 	if (s==0)
 		return n;
 	if (s<=64) {
-		n = _mm256_lrs_mm256_helper(n,s);
-		return n;
+		return _mm256_lrs_mm256_helper(n,s);
 	} else if (s<=128){
 		n = _mm256_lrs_64(n);
-		n = _mm256_lrs_mm256_helper(n,s-64);
-		return n;
+		return _mm256_lrs_mm256_helper(n,s-64);
 	}	else if (s<=192){
 		n = _mm256_lrs_128(n);
-		n = _mm256_lrs_mm256_helper(n,s-128);
-		return n;
+		return _mm256_lrs_mm256_helper(n,s-128);
 	} else if (s<=256){
 		n = _mm256_lrs_192(n);
-		n = _mm256_lrs_mm256_helper(n,s-192);
-		return n;
+		return _mm256_lrs_mm256_helper(n,s-192);
 	} else if (s>256)
-		return n = _mm256_setzero_si256();;
+		return _mm256_setzero_si256();
 	return n = _mm256_set_epi64x(0, 0, 0, 9ULL);
 }
 
