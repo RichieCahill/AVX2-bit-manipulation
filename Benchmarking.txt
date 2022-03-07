@@ -1,0 +1,114 @@
+This testing was done with gprof
+
+this isthe comand i used to compule
+g++ -pg -lfmt -mavx -pthread -march=native ./testing.cc
+
+helper3 is now helper 
+
+Left shifting 17 order helper1 helper2 helper3 small
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name 
+ 20.31      6.29     6.29 1000000000     0.00     0.00  _mm256_lls_mm256_Small(long long __vector(4), long)
+ 16.50     11.40     5.11 1000000000     0.00     0.00  _mm256_lls_mm256_helper1(long long __vector(4), long)
+ 15.53     16.21     4.81 1000000000     0.00     0.00  _mm256_lls_mm256_helper2(long long __vector(4), long)
+ 12.72     20.15     3.94 1000000000     0.00     0.00  _mm256_lls_mm256_helper3(long long __vector(4), long)
+
+ 18.05      5.77     5.77 1000000000     0.00     0.00  _mm256_lls_mm256_Small(long long __vector(4), long)
+ 17.06     11.22     5.46 1000000000     0.00     0.00  _mm256_lls_mm256_helper2(long long __vector(4), long)
+ 16.66     16.55     5.33 1000000000     0.00     0.00  _mm256_lls_mm256_helper1(long long __vector(4), long)
+ 13.04     20.72     4.17 1000000000     0.00     0.00  _mm256_lls_mm256_helper3(long long __vector(4), long)
+
+ 21.05      6.66     6.66 1000000000     0.00     0.00  _mm256_lls_mm256_Small(long long __vector(4), long)
+ 17.11     12.07     5.42 1000000000     0.00     0.00  _mm256_lls_mm256_helper2(long long __vector(4), long)
+ 16.83     17.40     5.33 1000000000     0.00     0.00  _mm256_lls_mm256_helper1(long long __vector(4), long)
+ 12.64     21.40     4.00 1000000000     0.00     0.00  _mm256_lls_mm256_helper3(long long __vector(4), long)
+
+Left shifting 42 order helper1 helper2 helper3 small
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name 
+ 17.80      5.49     5.49 1000000000     0.00     0.00  _mm256_lls_mm256_helper1(long long __vector(4), long)
+ 17.51     10.89     5.40 1000000000     0.00     0.00  _mm256_lls_mm256_Small(long long __vector(4), long)
+ 16.60     16.01     5.12 1000000000     0.00     0.00  _mm256_lls_mm256_helper2(long long __vector(4), long)
+ 13.59     20.20     4.19 1000000000     0.00     0.00  _mm256_lls_mm256_helper3(long long __vector(4), long)
+
+ 18.04      5.69     5.69 1000000000     0.00     0.00  _mm256_lls_mm256_helper1(long long __vector(4), long)
+ 17.34     11.16     5.47 1000000000     0.00     0.00  _mm256_lls_mm256_Small(long long __vector(4), long)
+ 16.71     16.43     5.27 1000000000     0.00     0.00  _mm256_lls_mm256_helper2(long long __vector(4), long)
+ 12.62     20.41     3.98 1000000000     0.00     0.00  _mm256_lls_mm256_helper3(long long __vector(4), long)
+
+ 19.44      6.02     6.02 1000000000     0.00     0.00  _mm256_lls_mm256_Small(long long __vector(4), long)
+ 16.55     11.14     5.12 1000000000     0.00     0.00  _mm256_lls_mm256_helper1(long long __vector(4), long)
+ 15.97     16.09     4.95 1000000000     0.00     0.00  _mm256_lls_mm256_helper2(long long __vector(4), long)
+ 12.85     20.07     3.98 1000000000     0.00     0.00  _mm256_lls_mm256_helper3(long long __vector(4), long)
+
+
+
+Left shifting 42 order helper3 helper1 helper2 small
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name 
+ 17.57      5.42     5.42 1000000000     0.00     0.00  _mm256_lls_mm256_helper1(long long __vector(4), long)
+ 17.52     10.81     5.40 1000000000     0.00     0.00  _mm256_lls_mm256_Small(long long __vector(4), long)
+ 16.21     15.81     5.00 1000000000     0.00     0.00  _mm256_lls_mm256_helper2(long long __vector(4), long)
+ 14.21     20.19     4.38 1000000000     0.00     0.00  _mm256_lls_mm256_helper3(long long __vector(4), long)
+
+ 18.66      5.86     5.86 1000000000     0.00     0.00  _mm256_lls_mm256_Small(long long __vector(4), long)
+ 16.88     11.16     5.30 1000000000     0.00     0.00  _mm256_lls_mm256_helper1(long long __vector(4), long)
+ 15.51     16.03     4.87 1000000000     0.00     0.00  _mm256_lls_mm256_helper2(long long __vector(4), long)
+ 12.87     20.07     4.04 1000000000     0.00     0.00  _mm256_lls_mm256_helper3(long long __vector(4), long)
+
+ 19.56      6.24     6.24 1000000000     0.00     0.00  _mm256_lls_mm256_Small(long long __vector(4), long)
+ 17.81     11.92     5.68 1000000000     0.00     0.00  _mm256_lls_mm256_helper1(long long __vector(4), long)
+ 16.21     17.09     5.17 1000000000     0.00     0.00  _mm256_lls_mm256_helper2(long long __vector(4), long)
+ 12.32     21.02     3.93 1000000000     0.00     0.00  _mm256_lls_mm256_helper3(long long __vector(4), long)
+
+
+Left shifting 42 order helper3 in for loop
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name 
+ 79.89      4.25     4.25 1000000000     4.25     4.25  _mm256_lls_mm256_helper3(long long __vector(4), long)
+ 75.58      3.93     3.93 1000000000     3.93     3.93  _mm256_lls_mm256_helper3(long long __vector(4), long)
+ 76.37      4.04     4.04 1000000000     4.04     4.04  _mm256_lls_mm256_helper3(long long __vector(4), long)
+
+
+Left shifting rand0to64 order helper3 in for loop 1000000000
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name 
+ 17.92     10.50     4.01 1000000000     0.00     0.00  _mm256_lls_mm256_helper(long long __vector(4), long)
+ 17.39      9.90     3.72 1000000000     0.00     0.00  _mm256_lls_mm256_helper(long long __vector(4), long)
+ 16.48      9.98     3.57 1000000000     0.00     0.00  _mm256_lls_mm256_helper(long long __vector(4), long)
+
+
+calling _mm256_lls_64 in for loop 1000000000
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name 
+ 62.27      2.41     2.41 1000000000     2.41     2.41  _mm256_lls_64(long long __vector(4))
+ 57.87      2.28     2.28 1000000000     2.28     2.28  _mm256_lls_64(long long __vector(4))
+ 61.06      2.43     2.43 1000000000     2.43     2.43  _mm256_lls_64(long long __vector(4))
+
+
+calling _mm256_lls_64 inlined in for loop 1000000000
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name 
+ 58.52      2.06     2.06 1000000000     2.06     2.06  _mm256_lls_642(long long __vector(4))
+ 57.07      2.14     2.14 1000000000     2.14     2.14  _mm256_lls_642(long long __vector(4))
+ 54.95      2.11     2.11 1000000000     2.11     2.11  _mm256_lls_642(long long __vector(4))
+
+
+Left shifting rand0to256 using _mm256_lls_mm256 in for loop 1000000000
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name 
+ 8.61     17.30     2.15 1000000000     0.00     0.00  _mm256_lls_mm256(long long __vector(4), long)
+ 7.20     16.66     1.76 1000000000     0.00     0.00  _mm256_lls_mm256(long long __vector(4), long)
+ 7.94     17.26     2.01 1000000000     0.00     0.00  _mm256_lls_mm256(long long __vector(4), long)
+ 7.84     17.77     1.98 1000000000     0.00     0.00  _mm256_lls_mm256(long long __vector(4), long)
+ 7.96     17.14     1.97 1000000000     0.00     0.00  _mm256_lls_mm256(long long __vector(4), long)
+
+appears to be slower witch is interesting
+Left shifting rand0to256 using _mm256_lls_mm256 inlined in for loop 1000000000
+  %   cumulative   self              self     total           
+  6.99     17.09     1.75 1000000000     0.00     0.00  _mm256_lls_mm256(long long __vector(4), long)
+  8.39     17.18     2.06 1000000000     0.00     0.00  _mm256_lls_mm256(long long __vector(4), long)
+  9.04     15.49     2.31 1000000000     0.00     0.00  _mm256_lls_mm256(long long __vector(4), long)
+  8.77     18.31     2.27 1000000000     0.00     0.00  _mm256_lls_mm256(long long __vector(4), long)
+  8.72     17.55     2.20 1000000000     0.00     0.00  _mm256_lls_mm256(long long __vector(4), long)
+
