@@ -20,8 +20,8 @@ __m256i _mm256_lrs_mm256(__m256i n, int64_t s)
 
 
 <details><summary>Backend Intrinsics</summary>
-<p>
-## Backend Intrinsics 
+
+## Backend Intrinsics
 ###	Logical Left Shift
 ```
 _mm256_lls_mm256_helper(__m256i n, int64_t s)
@@ -67,8 +67,6 @@ _mm256_lrs_192(__m256i n)
 ```
 - This will right shift an AVX register 192 bit to the right
 - The input is a __m256i
-
-</p>
 </details>
 
 Benchmarking.txt contains all the testing i did while optimizing Left Shift
