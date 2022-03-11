@@ -154,7 +154,7 @@ __m256i _mm256_lrs_64(__m256i n){
 
 // Logical Right shift by 128 for a avx 256bit register
 __m256i _mm256_lrs_128(__m256i n){
-	return _mm256_set_epi64x(0, 0, _mm256_extract_epi64(n, 3), _mm256_extract_epi64(n, 2);
+	return _mm256_set_epi64x(0, 0, _mm256_extract_epi64(n, 3), _mm256_extract_epi64(n, 2));
 }
 
 // Logical Right shift by 192 for a avx 256bit register
