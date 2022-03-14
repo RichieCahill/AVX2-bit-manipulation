@@ -10,6 +10,9 @@ __m256i _mm256_lls_mm256(__m256i n, int64_t s)
 - This left shifts an AVX register n by s number of bits
 - The input are a __m256i and a int64_t
 
+Errors codes
+- 11 input was a negative number
+- 9 Please contact me i have no idea what you did and this shouldn't be possible
 
 ###	Logical Right Shift
 ```

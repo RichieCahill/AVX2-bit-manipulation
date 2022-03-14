@@ -6,11 +6,11 @@ It Takes about 20 clock cycles to lefts shift
 */
 
 void avxout(__m256i a){
-std::cout << std::hex << _mm256_extract_epi64(a, 3) << "\n";
-std::cout << std::hex << _mm256_extract_epi64(a, 2) << "\n";
-std::cout << std::hex << _mm256_extract_epi64(a, 1) << "\n";
-std::cout << std::hex << _mm256_extract_epi64(a, 0) << "\n";
-std::cout << "\n";
+	std::cout << std::hex << _mm256_extract_epi64(a, 3) << "\n";
+	std::cout << std::hex << _mm256_extract_epi64(a, 2) << "\n";
+	std::cout << std::hex << _mm256_extract_epi64(a, 1) << "\n";
+	std::cout << std::hex << _mm256_extract_epi64(a, 0) << "\n";
+	std::cout << "\n";
 }
 
 /*
@@ -41,7 +41,7 @@ __m256i _mm256_lls_mm256_helper_old  (__m256i n, int64_t s){
 __m256i _mm256_lls_mm256_helper  (__m256i n, int64_t s){
 	if (s==0)
 		return n;
-	return _mm256_or_si256((n << s), _mm256_set_epi64x((_mm256_extract_epi64(n, 2) >> (64-s)), (_mm256_extract_epi64(n, 1) >> (64-s)), (_mm256_extract_epi64(n, 0) >> (64-s)), 0));
+	return _mm256_or_si256((n << s), _mm256_set_epi64x(((unsigned long long)_mm256_extract_epi64(n, 2) >> (64ull-s)), ((unsigned long long)_mm256_extract_epi64(n, 1) >> (64ull-s)), ((unsigned long long) _mm256_extract_epi64(n, 0) >> (64ull-s)), 0ull));
 }
 
 // Logical left shift by 64 for a avx 256bit register
@@ -62,6 +62,11 @@ __m256i _mm256_lls_128(__m256i n){
 	return _mm256_set_epi64x(_mm256_extract_epi64(n, 1), _mm256_extract_epi64(n, 0), 0, 0);
 }
 
+// Logical left shift by 128 for a avx 256bit register
+__m256i _mm256_lls_128_test(__m256i n){
+	return _mm256_set_m128i(_mm256_extracti128_si256(n, 0), _mm_setzero_si128 ());
+}
+
 // Logical left shift by 192 for a avx 256bit register
 __m256i _mm256_lls_192(__m256i n){
 	return _mm256_set_epi64x(_mm256_extract_epi64(n, 0), 0, 0, 0);
@@ -71,9 +76,11 @@ __m256i _mm256_lls_192(__m256i n){
 // Logical left shift for a avx 256bit register
 // it combines the larger shift _mm256_lls_* with the _mm256_lls_mm256_helper todo the final s bits
 __m256i _mm256_lls_mm256(__m256i n, int64_t s){
-	if (s==0)
+	if (s==0) {
 		return n;
-	if (s<=64) {
+	} else if (s<0) {
+	return n = _mm256_set_epi64x(0, 0, 0, 11ULL);
+	} else if (s<=64) {
 		return _mm256_lls_mm256_helper(n,s);
 	} else if (s<=128){
 		n = _mm256_lls_64(n);
