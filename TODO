@@ -1,7 +1,5 @@
 add
 128 bit Suport
+setup rotr and rotl
 
 Look into https://github.com/google/orbit
-
-
-change int64t to uint32_t

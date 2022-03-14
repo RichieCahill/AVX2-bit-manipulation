@@ -4,11 +4,11 @@ This is a library that allow bit manipulation that Intrinsics don't.
 ## Working Intrinsics
 ###	Logical Left Shift
 ```
-__m256i _mm256_lls_mm256(__m256i n, int64_t s)
+__m256i _mm256_lls_mm256(__m256i n, int32_t s)
 ```
 
 - This left shifts an AVX register n by s number of bits
-- The input are a __m256i and a int64_t
+- The input are a __m256i and a int32_t
 
 Errors codes
 - 11 input was a negative number
@@ -16,21 +16,24 @@ Errors codes
 
 ###	Logical Right Shift
 ```
-__m256i _mm256_lrs_mm256(__m256i n, int64_t s)
+__m256i _mm256_lrs_mm256(__m256i n, int32_t s)
 ```
 - This right shift an AVX register n by s number of bits
-- The input are a __m256i and i int int64_t
+- The input are a __m256i and i int int32_t
 
+Errors codes
+- 11 input was a negative number
+- 9 Please contact me i have no idea what you did and this shouldn't be possible
 
 <details><summary>Backend Intrinsics</summary>
 
 ## Backend Intrinsics
 ###	Logical Left Shift
 ```
-_mm256_lls_mm256_helper(__m256i n, int64_t s)
+_mm256_lls_mm256_helper(__m256i n, int32_t s)
 ```
 - This left shifts an AVX register n by s number of bits up to 64
-- The input are a __m256i and a int64_t
+- The input are a __m256i and a int32_t
 
 ```
 _mm256_lls_64(__m256i n)
@@ -51,10 +54,10 @@ _mm256_lls_192(__m256i n)
 
 ###	Logical Right Shift
 ```
-_mm256_lrs_mm256_helper(__m256i n, int64_t s)
+_mm256_lrs_mm256_helper(__m256i n, int32_t s)
 ```
 - This right shifts an AVX register n by s number of bits up to 64
-- The input are a __m256i and a int64_t
+- The input are a __m256i and a int32_t
 ```
 _mm256_lrs_64(__m256i n)
 ```
