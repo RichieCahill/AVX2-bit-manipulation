@@ -2,4 +2,3 @@ test.*
 *.out
 AVX512-bit-manipulation.h
 notes.txt
-test
