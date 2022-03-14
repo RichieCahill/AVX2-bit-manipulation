@@ -16,5 +16,5 @@ jobs:
     - name: make
       run: make
     - name: test check
-      run: test check
+      run: test
 
