@@ -118,6 +118,12 @@ __m256i _mm256_rotl (__m256i n, int32_t s){
 	return n;
 }
 
+__m256i _mm256_rotl_mm256_helper  (__m256i n, int32_t s){
+	if (s==0)
+		return n;
+	return _mm256_or_si256((n << s), _mm256_set_epi64x(((unsigned long long)_mm256_extract_epi64(n, 2) >> (64ull-s)), ((unsigned long long)_mm256_extract_epi64(n, 1) >> (64ull-s)), ((unsigned long long) _mm256_extract_epi64(n, 0) >> (64ull-s)), ((unsigned long long)_mm256_extract_epi64(n, 3) >> (64ull-s))));
+}
+
 /*
 // Logical right shift upto 64 bit for a avx 256bit register
 // this is hear to help explain with the new helper dose

@@ -31,6 +31,14 @@ int main(int argc, char const *argv[]){
 	const __m256i Test_64_2 = _mm256_set_epi64x(0ULL,0xFFFFFFFFFFFFFFFF,0ULL,0ULL);
 	const __m256i Test_64_3 = _mm256_set_epi64x(0xFFFFFFFFFFFFFFFF,0ULL,0ULL,0ULL);
 
+
+
+
+avxout(_mm256_rotl_mm256_helper(LOne,1));
+avxout(ROne);
+avxout(_mm256_rotl_mm256_helper(ROne,1));
+
+
 // Tests for Logical left shift
 	// Test the 64 bit shifts
 	Test(_mm256_lls_mm256(Test_64_0,64),Test_64_1);
