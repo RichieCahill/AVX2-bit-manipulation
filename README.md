@@ -1,6 +1,8 @@
 # AVX2-bit-manipulation
 This is a library that allow bit manipulation that Intrinsics don't.
 
+After testing I believe the the _mm256 left and right shift take 2 clock cycles
+
 ## Working Intrinsics
 ###	Logical Left Shift
 ```
@@ -22,6 +24,19 @@ __m256i _mm256_lrs_mm256(__m256i n, int32_t s)
 - The input are a __m256i and i int int32_t
 
 Errors codes
+- 11 input was a negative number
+- 9 Please contact me i have no idea what you did and this shouldn't be possible
+
+###	Rotate Left 
+```
+__m256i _mm256_rotl_mm256(__m256i n, int32_t s)
+```
+
+- This rotate left an AVX register n by s number of bits
+- The input are a __m256i and a int32_t
+- if the input is 256 or larger this will return zero  
+
+Errors codes 
 - 11 input was a negative number
 - 9 Please contact me i have no idea what you did and this shouldn't be possible
 

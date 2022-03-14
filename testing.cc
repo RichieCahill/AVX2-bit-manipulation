@@ -34,10 +34,6 @@ int main(int argc, char const *argv[]){
 
 
 
-avxout(_mm256_rotl_mm256_helper(LOne,1));
-avxout(ROne);
-avxout(_mm256_rotl_mm256_helper(ROne,1));
-
 
 // Tests for Logical left shift
 	// Test the 64 bit shifts
@@ -300,7 +296,7 @@ avxout(_mm256_rotl_mm256_helper(ROne,1));
 	Test(_mm256_lrs_mm256(Full,1073741823),Zero);
 	Test(_mm256_lrs_mm256(Full,0x7FFFFFFF),Zero);
 
-
+	// Tests negtiv number
 	Test(_mm256_lrs_mm256(Full,0xFFFFFFFF),_mm256_set_epi64x(0ULL,0ULL,0ULL,11ULL));
 	Test(_mm256_lrs_mm256(Full,-265),_mm256_set_epi64x(0ULL,0ULL,0ULL,11ULL));
 	Test(_mm256_lrs_mm256(Full,-1000),_mm256_set_epi64x(0ULL,0ULL,0ULL,11ULL));
@@ -333,6 +329,136 @@ avxout(_mm256_rotl_mm256_helper(ROne,1));
 
 
 	cout << "LRS Passed" << endl;
+
+	// Tests for Rotate left
+	// Test the 64 bit Rotate
+	Test(_mm256_rotl_mm256(Test_64_0,64),Test_64_1);
+	Test(_mm256_rotl_mm256(Test_64_0,128),Test_64_2);
+	Test(_mm256_rotl_mm256(Test_64_0,192),Test_64_3);
+
+	Test(_mm256_rotl_mm256(Test_64_1,64),Test_64_2);
+	Test(_mm256_rotl_mm256(Test_64_1,128),Test_64_3);
+	Test(_mm256_rotl_mm256(Test_64_1,192),Test_64_0);
+
+	Test(_mm256_rotl_mm256(Test_64_2,64),Test_64_3);
+	Test(_mm256_rotl_mm256(Test_64_2,128),Test_64_0);
+	Test(_mm256_rotl_mm256(Test_64_2,192),Test_64_1);
+
+	Test(_mm256_rotl_mm256(Test_64_3,64),Test_64_0);
+	Test(_mm256_rotl_mm256(Test_64_3,128),Test_64_1);
+	Test(_mm256_rotl_mm256(Test_64_3,192),Test_64_2);
+
+
+	for (int32_t i = 1; i <= 255; i++){
+		Test(_mm256_rotl_mm256(Full,i),Full);
+	}
+
+	// Test for pattern A Rotate left 1 to 256
+	for (int32_t i = 1; i <= 255; i++){
+			if (i%2==0){
+			Test(_mm256_rotl_mm256(TestA,i),TestA);
+	} else {
+			Test(_mm256_rotl_mm256(TestA,i),TestB);
+		}
+	}
+
+	// Test for pattern B Rotate left 1 to 256
+	for (int32_t i = 1; i <= 255; i++){
+			if (i%2==0){
+			Test(_mm256_rotl_mm256(TestB,i),TestB);
+		} else {
+			Test(_mm256_rotl_mm256(TestB,i),TestA);
+		}
+	}
+
+	// Test for patern One4 Rotate left 1 to 256
+	for (int32_t i = 1; i <= 64; i++){
+		int32_t a=i+64,b=i+128,c=i+192;
+		Test(_mm256_rotl_mm256(One4,i),_mm256_set_epi64x((1ULL<<i),(1ULL<<i),(1ULL<<i),(1ULL<<i)));
+		Test(_mm256_rotl_mm256(One4,a),_mm256_set_epi64x((1ULL<<i),(1ULL<<i),(1ULL<<i),(1ULL<<i)));
+		Test(_mm256_rotl_mm256(One4,b),_mm256_set_epi64x((1ULL<<i),(1ULL<<i),(1ULL<<i),(1ULL<<i)));
+		Test(_mm256_rotl_mm256(One4,b),_mm256_set_epi64x((1ULL<<i),(1ULL<<i),(1ULL<<i),(1ULL<<i)));
+
+	}
+
+	// Test for patern One4 Rotate left 1 to 256
+	for (int32_t i = 1; i <= 64; i++){
+		int32_t a=i+64,b=i+128,c=i+192;
+		Test(_mm256_rotl_mm256(One4,i),_mm256_set_epi64x((1ULL<<i),(1ULL<<i),(1ULL<<i),(1ULL<<i)));
+		Test(_mm256_rotl_mm256(One4,a),_mm256_set_epi64x((1ULL<<i),(1ULL<<i),(1ULL<<i),(1ULL<<i)));
+		Test(_mm256_rotl_mm256(One4,b),_mm256_set_epi64x((1ULL<<i),(1ULL<<i),(1ULL<<i),(1ULL<<i)));
+		Test(_mm256_rotl_mm256(One4,b),_mm256_set_epi64x((1ULL<<i),(1ULL<<i),(1ULL<<i),(1ULL<<i)));
+
+	}
+
+	// Test for patern LOne Rotate left 1 to 256
+	for (int32_t i = 1; i <= 63; i++){
+		int32_t a=i+64,b=i+128,c=i+192;
+		Test(_mm256_rotl_mm256(LOne,i),_mm256_set_epi64x(0ULL,0ULL,0ULL,(1ULL<<i)));
+		Test(_mm256_rotl_mm256(LOne,a),_mm256_set_epi64x(0ULL,0ULL,(1ULL<<i),0ULL));
+		Test(_mm256_rotl_mm256(LOne,b),_mm256_set_epi64x(0ULL,(1ULL<<i),0ULL,0ULL));
+		Test(_mm256_rotl_mm256(LOne,c),_mm256_set_epi64x((1ULL<<i),0ULL,0ULL,0ULL));
+	}
+
+
+	// Test for patern ROne Rotate left 1 to 256
+	for (int32_t i = 1; i <= 63; i++){
+		int32_t a=i+64,b=i+128,c=i+192;
+		Test(_mm256_rotl_mm256(ROne,i),_mm256_set_epi64x((1ULL<<i),0ULL,0ULL,0ULL));
+		Test(_mm256_rotl_mm256(ROne,a),_mm256_set_epi64x(0ULL,0ULL,0ULL,(1ULL<<i)));
+		Test(_mm256_rotl_mm256(ROne,b),_mm256_set_epi64x(0ULL,0ULL,(1ULL<<i),0ULL));
+		Test(_mm256_rotl_mm256(ROne,c),_mm256_set_epi64x(0ULL,(1ULL<<i),0ULL,0ULL));
+	}
+
+		// Tests Number 256 to 10000000
+	for (int32_t i = 265; i < 10000000; i++){
+		Test(_mm256_rotl_mm256(Full,i),Zero);
+	}
+	Test(_mm256_rotl_mm256(Full,10000000),Zero);
+	Test(_mm256_rotl_mm256(Full,100000000),Zero);
+	Test(_mm256_rotl_mm256(Full,999999999),Zero);
+	Test(_mm256_rotl_mm256(Full,1073741823),Zero);
+	Test(_mm256_rotl_mm256(Full,0x7FFFFFFF),Zero);
+
+	// Tests negtiv number
+
+	Test(_mm256_rotl_mm256(Full,0xFFFFFFFF),_mm256_set_epi64x(0ULL,0ULL,0ULL,11ULL));
+	Test(_mm256_rotl_mm256(Full,-265),_mm256_set_epi64x(0ULL,0ULL,0ULL,11ULL));
+	Test(_mm256_rotl_mm256(Full,-1000),_mm256_set_epi64x(0ULL,0ULL,0ULL,11ULL));
+	Test(_mm256_rotl_mm256(Full,-10000),_mm256_set_epi64x(0ULL,0ULL,0ULL,11ULL));
+	Test(_mm256_rotl_mm256(Full,-100000),_mm256_set_epi64x(0ULL,0ULL,0ULL,11ULL));
+	Test(_mm256_rotl_mm256(Full,-1000000),_mm256_set_epi64x(0ULL,0ULL,0ULL,11ULL));
+	Test(_mm256_rotl_mm256(Full,-999999999),_mm256_set_epi64x(0ULL,0ULL,0ULL,11ULL));
+	
+	// Back end Test
+	Test(_mm256_rotl_64(Full),Full);
+	Test(_mm256_rotl_128(Full),Full);
+	Test(_mm256_rotl_192(Full),Full);
+
+	Test(_mm256_rotl_64(TestA),TestA);
+	Test(_mm256_rotl_128(TestA),TestA);
+	Test(_mm256_rotl_192(TestA),TestA);
+
+	Test(_mm256_rotl_64(TestB),TestB);
+	Test(_mm256_rotl_128(TestB),TestB);
+	Test(_mm256_rotl_192(TestB),TestB);
+
+	Test(_mm256_rotl_64(Test_64_0),Test_64_1);
+	Test(_mm256_rotl_128(Test_64_0),Test_64_2);
+	Test(_mm256_rotl_192(Test_64_0),Test_64_3);
+
+	Test(_mm256_rotl_64(Test_64_1),Test_64_2);
+	Test(_mm256_rotl_128(Test_64_1),Test_64_3);
+	Test(_mm256_rotl_192(Test_64_1),Test_64_0);
+
+	Test(_mm256_rotl_64(Test_64_2),Test_64_3);
+	Test(_mm256_rotl_128(Test_64_2),Test_64_0);
+	Test(_mm256_rotl_192(Test_64_2),Test_64_1);
+
+	Test(_mm256_rotl_64(Test_64_3),Test_64_0);
+	Test(_mm256_rotl_128(Test_64_3),Test_64_1);
+	Test(_mm256_rotl_192(Test_64_3),Test_64_2);
+	cout << "ROTL Passed" << endl;
 
 	return 0;
 }
