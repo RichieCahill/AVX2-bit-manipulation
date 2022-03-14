@@ -30,6 +30,7 @@ int main(int argc, char const *argv[]){
 	const __m256i Test_64_3 = _mm256_set_epi64x(0xFFFFFFFFFFFFFFFF,0ULL,0ULL,0ULL);
 
 	// Test the 64 bit shifts
+
 	Test(_mm256_lls_mm256(Test_64_0,64),Test_64_1);
 
 	Test(_mm256_lls_mm256(Test_64_0,128),Test_64_2);
@@ -49,7 +50,7 @@ int main(int argc, char const *argv[]){
 	Test(_mm256_lls_mm256(Test_64_2,128),Zero);
 
 	// Test for the 1 bit shifts
-
+	
 	// Test A
 	Test(_mm256_lls_mm256(TestA,1),_mm256_set_epi64x(0xAAAAAAAAAAAAAAAA,0xAAAAAAAAAAAAAAAA,0xAAAAAAAAAAAAAAAA,0xAAAAAAAAAAAAAAAA));
 	Test(_mm256_lls_mm256(TestA,2),_mm256_set_epi64x(0x5555555555555555,0x5555555555555555,0x5555555555555555,0x5555555555555554));
