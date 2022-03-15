@@ -13,6 +13,24 @@ void avxout(__m256i a){
 	std::cout << "\n";
 }
 
+
+// testing the fastest wayt to fill an avx registyer is
+// Return vector of type __m256i with all elements set to one.
+__m256i _mm256_setone_si256_test1(){
+	return _mm256_and_si256(_mm256_setzero_si256(),_mm256_setzero_si256());
+}
+
+__m256i _mm256_setone_si256_test2(){
+	return _mm256_set_epi64x(0xFFFFFFFFFFFFFFFF,0xFFFFFFFFFFFFFFFF,0xFFFFFFFFFFFFFFFF,0xFFFFFFFFFFFFFFFF);
+}
+
+__m256i _mm256_setone_si256_test3(){
+	return _mm256_set1_epi64x(0xFFFFFFFFFFFFFFFF);
+}
+
+
+
+
 /*
 // Logical left shift upto 64 bit for a avx 256bit register
 // this is hear to help explain with the new helper dose
@@ -295,3 +313,35 @@ __m256i _mm256_rotr (__m256i n, int32_t s){
 	n = _mm256_or_si256(n, temp);
 	return n;
 }
+
+// Logical left shift upto 64 bit for a avx 256bit register 
+__m128i _mm_lls_si128_helper  (__m128i n, int32_t s){
+	if (s==0)
+		return n;
+	return _mm_or_si128((n << s), _mm_set_epi64x(((unsigned long long) _mm_extract_epi64(n, 0) >> (64ull-s)), 0ull));
+}
+
+
+// Logical left shift by 64 for a avx 256bit register
+__m128i _mm_lls_64(__m128i n){
+	return _mm_set_epi64x(_mm_extract_epi64(n, 0), 0);
+}
+
+
+// Logical left shift for a avx 256bit register
+// it combines the larger shift _mm256_lls_* with the _mm256_lls_mm256_helper todo the final s bits
+__m128i _mm_lls_si128 (__m128i n, int32_t s){
+	if (s==0) {
+		return n;
+	} else if (s<0) {
+	return n = _mm_set_epi64x(0, 11ULL);
+	} else if (s<=64) {
+		return _mm_lls_si128_helper(n,s);
+	} else if (s<=128){
+		n = _mm_lls_64(n);
+		return _mm_lls_si128_helper(n,s-64);
+	} else if (s>128)
+		return _mm_setzero_si128();
+	return n = _mm_set_epi64x(0, 9ULL);
+}
+
