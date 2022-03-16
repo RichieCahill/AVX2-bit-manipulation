@@ -1,7 +1,7 @@
 # AVX2-bit-manipulation
 This is a library that allow bit manipulation that Intrinsics don't.
 
-After testing I believe the the _mm256 left and right shift take 2 clock cycles
+After testing I believe the the _mm256 left and right shift take 20 clock cycles
 
 ## Working Intrinsics
 ###	Logical Left Shift
