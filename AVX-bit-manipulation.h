@@ -13,24 +13,6 @@ void avxout(__m256i a){
 	std::cout << "\n";
 }
 
-
-// testing the fastest wayt to fill an avx registyer is
-// Return vector of type __m256i with all elements set to one.
-__m256i _mm256_setone_si256_test1(){
-	return _mm256_and_si256(_mm256_setzero_si256(),_mm256_setzero_si256());
-}
-
-__m256i _mm256_setone_si256_test2(){
-	return _mm256_set_epi64x(0xFFFFFFFFFFFFFFFF,0xFFFFFFFFFFFFFFFF,0xFFFFFFFFFFFFFFFF,0xFFFFFFFFFFFFFFFF);
-}
-
-__m256i _mm256_setone_si256_test3(){
-	return _mm256_set1_epi64x(0xFFFFFFFFFFFFFFFF);
-}
-
-
-
-
 /*
 // Logical left shift upto 64 bit for a avx 256bit register
 // this is hear to help explain with the new helper dose
